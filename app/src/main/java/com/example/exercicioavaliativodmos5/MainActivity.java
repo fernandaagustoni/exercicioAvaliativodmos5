@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText temperaturaEditText;
     private Button celsiusButton;
     private Button fahrenheitButton;
+    private Button kelvinFahrenheitButton;
+    private Button kelvinCelsiusButton;
     private TextView saidaTextView;
 
     @Override
@@ -25,9 +27,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         celsiusButton = findViewById(R.id.button_celsius);
         saidaTextView = findViewById(R.id.textview_value_converted);
         fahrenheitButton = findViewById(R.id.button_fahrenheit);
+        kelvinCelsiusButton = findViewById(R.id.button_kelvinCelsius);
+        kelvinFahrenheitButton = findViewById(R.id.button_kelvinFahrenheit);
 
         celsiusButton.setOnClickListener(this);
         fahrenheitButton.setOnClickListener(this);
+        kelvinCelsiusButton.setOnClickListener(this);
+        kelvinFahrenheitButton.setOnClickListener(this);
     }
 
     @Override
@@ -44,6 +50,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             entrada = getTemperatura();
             saida = paraFahrenheit(entrada);
             saidaFormatada += "F ";
+        }
+        if(v == kelvinFahrenheitButton){
+            entrada = getTemperatura();
+            saida = fahrenheitParaKelvin(entrada);
+            saidaFormatada += "K ";
+        }
+        if(v == kelvinCelsiusButton){
+            entrada = getTemperatura();
+            saida = celsiusParaKelvin(entrada);
+            saidaFormatada += "K ";
         }
         saidaTextView.setText(String.format(saidaFormatada, saida));
     }
@@ -63,6 +79,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return 1.8 * temperatura + 32;
     }
 
+    private double fahrenheitParaKelvin(double temperatura){
+
+        double kelvin;
+        kelvin = (temperatura - 32) * 5/9 + 273.15;
+        return kelvin;
+    }
+
+    private double celsiusParaKelvin(double temperatura){
+        return temperatura + 273.15;
+    }
     private double getTemperatura(){
         double temperatura;
         try{
