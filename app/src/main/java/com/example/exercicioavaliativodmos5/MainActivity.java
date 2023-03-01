@@ -12,7 +12,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText temperaturaEditText;
-    private Button paraCelsiusButton;
+    private Button celsiusButton;
+    private Button fahrenheitButton;
     private TextView saidaTextView;
 
     @Override
@@ -21,28 +22,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         temperaturaEditText = findViewById(R.id.edittext_value);
-        paraCelsiusButton = findViewById(R.id.button_celsius);
+        celsiusButton = findViewById(R.id.button_celsius);
         saidaTextView = findViewById(R.id.textview_value_converted);
+        fahrenheitButton = findViewById(R.id.button_fahrenheit);
 
-        paraCelsiusButton.setOnClickListener(this);
+        celsiusButton.setOnClickListener(this);
+        fahrenheitButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if(v == paraCelsiusButton){
-            double entrada;
-            try{
-                entrada = Double.valueOf(temperaturaEditText.getText().toString());
-            }catch (NumberFormatException nfe){
-                entrada = 0;
-                mostraMensagem("Temperatura de entrada inválida!");
-            }catch (Exception e){
-                entrada = 0;
-                mostraMensagem("Erro na entrada de dados!");
-            }
-            saidaTextView.setText(String.format("%.2f ºC", paraCelsius(entrada)));
+        double entrada, saida=0;
+        String saidaFormatada;
+        saidaFormatada = "%.2f º";
+        if(v == celsiusButton){
+            entrada = getTemperatura();
+            saida = paraCelsius(entrada);
+            saidaFormatada += "C ";
         }
+        if(v == fahrenheitButton){
+            entrada = getTemperatura();
+            saida = paraFahrenheit(entrada);
+            saidaFormatada += "F ";
+        }
+        saidaTextView.setText(String.format(saidaFormatada, saida));
     }
+
 
     private void mostraMensagem(String mensagem){
         Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
@@ -53,5 +58,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         double celsius;
         celsius = (temperatura - 32) / 1.8;
         return celsius;
+    }
+    private double paraFahrenheit(double temperatura){
+        return 1.8 * temperatura + 32;
+    }
+
+    private double getTemperatura(){
+        double temperatura;
+        try{
+            temperatura = Double.valueOf(temperaturaEditText.getText().toString());
+        }catch (NumberFormatException nfe){
+            temperatura = 0;
+            mostraMensagem(getString(R.string.temperatura_invalida));
+        }catch (Exception e){
+            temperatura = 0;
+            mostraMensagem(getString(R.string.erro_entrada));
+        }
+        return temperatura;
     }
 }
